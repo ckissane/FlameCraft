@@ -18,7 +18,7 @@ public class FlameGenerator extends GraphicsProgram {
 	public int height = width;
 	public int halfway = width / 2;
 	public ArrayList<ArrayList<Double>> coeffs = new ArrayList<ArrayList<Double>>();
-	public int coeffCount = 8;
+	public int coeffCount = 6;
 	public Graphics2D imgGraphics;
 	public BufferedImage image = new BufferedImage(width, height,
 			BufferedImage.TYPE_INT_RGB);
@@ -66,7 +66,7 @@ public class FlameGenerator extends GraphicsProgram {
 			
 			this.removeAll();
 			add(new GImage(image));
-			pause(2000);
+			pause(100);
 		}
 		
 	}
@@ -109,7 +109,7 @@ public class FlameGenerator extends GraphicsProgram {
 			px=random(-1,1);
 			py=random(-1,1);
 			//genThread=new GeneratingThread(this);
-			float c = boss.coeffCount-1;
+			float c = 0F;
 			//genThread.start();
 			for(int m=0;m<1000;m++){
 				for(int i=0;i<100000;i++){
@@ -119,11 +119,11 @@ public class FlameGenerator extends GraphicsProgram {
 					//	c = 0F;
 					//}
 					if(c==0F){
-						c=choice;
+						c=(float) (1.0/boss.coeffCount*choice);
 					}
-					c=(c+choice)/2;
-					Color hsb=Color.getHSBColor(c/boss.coeffCount, 1F, 50);
-					if(steps>0){
+					c=(float) ((c+(1.0/boss.coeffCount*choice))/2);
+					Color hsb=Color.getHSBColor(c, 1F, 50);
+					if(steps>1){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}
 					steps++;

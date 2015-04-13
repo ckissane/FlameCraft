@@ -18,7 +18,7 @@ public class FlameGenerator extends GraphicsProgram {
 	public int height = width;
 	public int halfway = width / 2;
 	public ArrayList<ArrayList<Double>> coeffs = new ArrayList<ArrayList<Double>>();
-	public int coeffCount = 3;
+	public int coeffCount = 6;
 	public float colorOff=0.5F;
 	public Graphics2D imgGraphics;
 	public BufferedImage image = new BufferedImage(width, height,
@@ -111,7 +111,7 @@ public class FlameGenerator extends GraphicsProgram {
 			for(int m=0;m<1000;m++){
 				for(int i=0;i<100000;i++){
 					int choice = new Random().nextInt(boss.coeffCount-1);
-					transform(choice,2);
+					transform(choice,21);
 					//if(steps==0){
 					//	c = 0F;
 					//}
@@ -125,7 +125,10 @@ public class FlameGenerator extends GraphicsProgram {
 					if(steps>1){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}
-					steps++;
+					transform(choice,2);
+					if(steps>0){
+						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
+					}
 				}
 			}
 			this.stop();
@@ -151,6 +154,27 @@ public class FlameGenerator extends GraphicsProgram {
 				px=x*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
 				py=y*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
 			}
+			if(method==3){
+				px=x*Math.sin(r)-y*Math.cos(r);
+				py=x*Math.cos(r)+y*Math.sin(r);
+			}
+			if(method==4){
+				px=Math.sin(x);
+				py=x*Math.sin(y);
+			}
+			if(method==16){
+				px=2/(r+1)*y;
+				py=2/(r+1)*x;
+			}
+			if(method==21){
+				px=1/(r+1)*x;
+				py=1/(r+1)*y;
+			}
+			if(method==27){
+				px=2/(r+1)*x;
+				py=2/(r+1)*y;
+			}
+			steps++;
 			if(Math.abs(px)>1||Math.abs(py)>1){
 				px=random(-1,1);
 				py=random(-1,1);

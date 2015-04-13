@@ -58,4 +58,3 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /bin/
-/target/

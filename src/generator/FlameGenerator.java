@@ -110,7 +110,7 @@ public class FlameGenerator extends GraphicsProgram {
 			for(int m=0;m<1000;m++){
 				for(int i=0;i<100000;i++){
 					int choice = new Random().nextInt(boss.coeffCount-1);
-					transform(choice,1);
+					transform(choice,2);
 					//if(steps==0){
 					//	c = 0F;
 					//}
@@ -136,8 +136,18 @@ public class FlameGenerator extends GraphicsProgram {
 
 		public void variate(double x, double y,int method) {
 			double r=(x*x)+(y*y);
-			px=x*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
-			py=y*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
+			if(method==0){
+				px=x;
+				py=y;
+			}
+			if(method==1){
+				px=x*Math.sin(r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
+				py=y*Math.cos(r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
+			}
+			if(method==2){
+				px=x*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
+				py=y*(1/r);//.max(new BigDecimal(-1)).min(new BigDecimal(1));
+			}
 			if(Math.abs(px)>1||Math.abs(py)>1){
 				px=random(-1,1);
 				py=random(-1,1);

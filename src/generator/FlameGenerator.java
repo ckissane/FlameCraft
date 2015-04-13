@@ -23,6 +23,7 @@ public class FlameGenerator extends GraphicsProgram {
 	public Graphics2D imgGraphics;
 	public BufferedImage image = new BufferedImage(width, height,
 			BufferedImage.TYPE_INT_RGB);
+	public float coffset=0.2F;
 
 	public void init(){
 		for(int i=0;i<coeffCount;i++){
@@ -118,7 +119,9 @@ public class FlameGenerator extends GraphicsProgram {
 						c=(float) (1.0/boss.coeffCount*choice);
 					}
 					c=(float) ((c+(1.0/boss.coeffCount*choice))/2);
-					Color hsb=Color.getHSBColor(c+boss.colorOff, 1F, 50);
+
+					Color hsb=Color.getHSBColor(c, 1F, 50);
+
 					if(steps>1){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}

@@ -37,7 +37,7 @@ public class FlameGenerator extends GraphicsProgram {
 		}
 		image.createGraphics();
 		imgGraphics = (Graphics2D) image.getGraphics();
-		imgGraphics.setColor(Color.black);
+		imgGraphics.setColor(Color.white);
 		imgGraphics.fillRect(0, 0, width,height);
 		this.setSize(width, height);
 	}
@@ -126,6 +126,9 @@ public class FlameGenerator extends GraphicsProgram {
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}
 					transform(choice,2);
+					c=(float) ((c+(1.0/boss.coeffCount*1))/2);
+
+					hsb=Color.getHSBColor(c, 1F, 50);
 					if(steps>0){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}

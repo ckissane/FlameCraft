@@ -5,29 +5,39 @@ import acm.program.GraphicsProgram;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
 public class FlameGenerator extends GraphicsProgram {
 	//private BigDecimal px;
 	//private BigDecimal py;
+	JButton export = new JButton("Export");
 	private GeneratingThread genThread;
 	private GeneratingThread genThread2;
-	public int width = 1000;
+	public int width = 2000;
 	public int height = width;
 	public int halfway = width / 2;
-	public ArrayList<ArrayList<Double>> coeffs = new ArrayList<ArrayList<Double>>();
 	public int coeffCount = 6;
-	public float colorOff=0.5F;
+	public ArrayList<ArrayList<Double>> coeffs = new ArrayList<ArrayList<Double>>(coeffCount);
+	public float colorOff=0.1F;
 	public Graphics2D imgGraphics;
 	public BufferedImage image = new BufferedImage(width, height,
 			BufferedImage.TYPE_INT_RGB);
+	public GImage display=new GImage(image);
 	public float coffset=0.2F;
-
+	public ArrayList<ArrayList<Float>> colors=new ArrayList<ArrayList<Float>>(width);
+	public ArrayList<ArrayList<Integer>> shades=new ArrayList<ArrayList<Integer>>(width);
 	public void init(){
 		for(int i=0;i<coeffCount;i++){
-			coeffs.add(new ArrayList<Double>());
+			coeffs.add(new ArrayList<Double>(6));
 			for(int c=0;c<6;c++){
 				coeffs.get(i).add(random(0.5,1));
 				if(new Random().nextBoolean()){
@@ -35,11 +45,23 @@ public class FlameGenerator extends GraphicsProgram {
 				}
 			}
 		}
+		for(int i=0;i<width;i++){
+			shades.add(new ArrayList<Integer>(height));
+			colors.add(new ArrayList<Float>(height));
+			for(int c=0;c<height;c++){
+				colors.get(i).add(0.0F);
+				shades.get(i).add(0);
+			}
+		}
 		image.createGraphics();
 		imgGraphics = (Graphics2D) image.getGraphics();
 		imgGraphics.setColor(Color.black);
 		imgGraphics.fillRect(0, 0, width,height);
-		this.setSize(width, height);
+		this.setSize(1000, 1000);
+		export.setActionCommand("export");
+		export.addActionListener(this);
+		add(export,NORTH);
+		add(display);
 	}
 	public void run(){
 		//px=random(-1,1);
@@ -67,12 +89,21 @@ public class FlameGenerator extends GraphicsProgram {
 			}*/
 			
 			this.removeAll();
-			add(new GImage(image));
+			display=new GImage(image);
+			display.setImage(image);
+			display.scale(1000.0/width);
+			add(display);
 			pause(100);
 		}
 		
 	}
+	public void actionPerformed(ActionEvent e) {
+		if ("export".equals(e.getActionCommand())) {
+			openSave();
+		}
+	}
 	public void exit(){
+		add(new GImage(image));
 			genThread.stop();
 			genThread2.stop();
 		super.exit();
@@ -87,6 +118,33 @@ public class FlameGenerator extends GraphicsProgram {
 				(int) (y*halfway+halfway),
 				(int) (x*halfway+halfway),
 				(int) (y*halfway+halfway));
+	}
+	
+	public static void saveImage(BufferedImage img, String ref) {
+		try {
+			String newref=ref;
+			if(!ref.endsWith(".png") && !ref.endsWith(".jpg")){
+				newref=ref+".png";
+			}
+			String format = (newref.endsWith(".png")) ? "png" : "jpg";
+			ImageIO.write(img, format, new File(newref));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void openSave() {
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setName("fractal.png");
+		int returnVal = fc.showSaveDialog(this.createProgramFrame());
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			println("saving: " + file.getName() +","+ file.getPath()+".");
+			saveImage(this.image,file.getPath());
+		} else {
+			println("Save command cancelled by user.");
+		}
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -111,7 +169,7 @@ public class FlameGenerator extends GraphicsProgram {
 			for(int m=0;m<1000;m++){
 				for(int i=0;i<100000;i++){
 					int choice = new Random().nextInt(boss.coeffCount-1);
-					transform(choice,21);
+					transform(choice,2);
 					//if(steps==0){
 					//	c = 0F;
 					//}
@@ -122,10 +180,10 @@ public class FlameGenerator extends GraphicsProgram {
 
 					Color hsb=Color.getHSBColor(c, 1F, 50);
 
-					if(steps>1){
+					if(steps>0){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}
-					transform(choice,2);
+					transform(choice,3);
 					if(steps>0){
 						boss.plotPoint(px,py,new Color(hsb.getRed(),hsb.getGreen(),hsb.getBlue(),50));
 					}

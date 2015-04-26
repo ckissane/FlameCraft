@@ -37,7 +37,7 @@ public class FlameGenerator extends GraphicsProgram {
 		}
 		image.createGraphics();
 		imgGraphics = (Graphics2D) image.getGraphics();
-		imgGraphics.setColor(Color.white);
+		imgGraphics.setColor(Color.black);
 		imgGraphics.fillRect(0, 0, width,height);
 		this.setSize(width, height);
 	}
@@ -106,16 +106,16 @@ public class FlameGenerator extends GraphicsProgram {
 			px=random(-1,1);
 			py=random(-1,1);
 			//genThread=new GeneratingThread(this);
-			float c = 0F;
+			float c = 0.3F;
 			//genThread.start();
 			for(int m=0;m<1000;m++){
 				for(int i=0;i<100000;i++){
 					int choice = new Random().nextInt(boss.coeffCount-1);
-					transform(choice,21);
+					transform(choice,3);
 					//if(steps==0){
 					//	c = 0F;
 					//}
-					if(c==0F){
+					if(c==0.3F){
 						c=(float) (1.0/boss.coeffCount*choice);
 					}
 					c=(float) ((c+(1.0/boss.coeffCount*choice))/2);
